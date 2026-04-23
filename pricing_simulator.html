@@ -1,0 +1,389 @@
+
+<style>
+  :root {
+    --eve-bg: #03070f;
+    --eve-surface: #080f1c;
+    --eve-panel: #0b1422;
+    --eve-card: #0e1929;
+    --eve-border: rgba(0, 180, 255, 0.15);
+    --eve-border-bright: rgba(0, 200, 255, 0.35);
+    --eve-cyan: #00b4ff;
+    --eve-cyan-dim: rgba(0, 180, 255, 0.7);
+    --eve-cyan-glow: rgba(0, 180, 255, 0.12);
+    --eve-white: #e8f4ff;
+    --eve-muted: #6a8aaa;
+    --eve-subtle: #354a62;
+    --eve-green: #00e5a0;
+    --eve-amber: #ffb340;
+    --eve-red: #ff4d6a;
+    --eve-accent: #1a3a5c;
+  }
+
+  .eve-wrap * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+  .eve-wrap { background: var(--eve-bg); color: var(--eve-white); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--eve-border); }
+
+  .eve-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.75rem; padding-bottom: 1rem; border-bottom: 1px solid var(--eve-border); }
+  .eve-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--eve-cyan); flex-shrink: 0; box-shadow: 0 0 6px var(--eve-cyan); }
+  .eve-header-title { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--eve-cyan); font-weight: 500; }
+  .eve-header-sub { font-size: 11px; color: var(--eve-muted); margin-left: auto; letter-spacing: 0.06em; }
+
+  .eve-tabs { display: flex; gap: 2px; margin-bottom: 1.5rem; background: var(--eve-surface); border-radius: 8px; padding: 3px; border: 1px solid var(--eve-border); }
+  .eve-tab { flex: 1; padding: 7px 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 6px; background: transparent; border: none; color: var(--eve-muted); transition: all 0.15s; }
+  .eve-tab.active { background: var(--eve-accent); color: var(--eve-cyan); border: 1px solid var(--eve-border-bright); }
+
+  .eve-section-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--eve-muted); margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .eve-section-label::after { content: ''; flex: 1; height: 1px; background: var(--eve-border); }
+
+  .eve-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .eve-row label { font-size: 12px; color: var(--eve-muted); min-width: 170px; letter-spacing: 0.02em; }
+  .eve-row .val { font-size: 12px; font-weight: 500; min-width: 58px; text-align: right; color: var(--eve-cyan); font-variant-numeric: tabular-nums; }
+
+  .eve-input { background: var(--eve-surface); border: 1px solid var(--eve-border); border-radius: 6px; color: var(--eve-white); font-size: 13px; padding: 5px 10px; width: 90px; text-align: right; outline: none; }
+  .eve-input:focus { border-color: var(--eve-cyan-dim); }
+  .eve-input-unit { font-size: 11px; color: var(--eve-subtle); }
+
+  input[type=range].eve-range { -webkit-appearance: none; appearance: none; flex: 1; height: 4px; border-radius: 2px; background: var(--eve-surface); border: none; outline: none; cursor: pointer; position: relative; }
+  input[type=range].eve-range::-webkit-slider-runnable-track { height: 4px; background: linear-gradient(to right, var(--eve-cyan) 0%, var(--eve-cyan) var(--pct, 50%), var(--eve-border) var(--pct, 50%)); border-radius: 2px; }
+  input[type=range].eve-range::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--eve-bg); border: 2px solid var(--eve-cyan); margin-top: -5px; }
+  input[type=range].eve-range::-moz-range-track { height: 4px; background: var(--eve-border); border-radius: 2px; }
+  input[type=range].eve-range::-moz-range-progress { height: 4px; background: var(--eve-cyan); border-radius: 2px; }
+  input[type=range].eve-range::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--eve-bg); border: 2px solid var(--eve-cyan); }
+
+  .eve-divider { border: none; border-top: 1px solid var(--eve-border); margin: 1.25rem 0; }
+
+  .eve-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 1.5rem; }
+  .eve-metric { background: var(--eve-card); border: 1px solid var(--eve-border); border-radius: 8px; padding: 0.875rem 1rem; }
+  .eve-metric.primary { border-color: var(--eve-border-bright); background: var(--eve-panel); }
+  .eve-metric .mlabel { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--eve-muted); margin: 0 0 6px; }
+  .eve-metric .mvalue { font-size: 20px; font-weight: 500; color: var(--eve-white); margin: 0; font-variant-numeric: tabular-nums; }
+  .eve-metric.primary .mvalue { color: var(--eve-cyan); }
+  .eve-metric .msub { font-size: 10px; color: var(--eve-subtle); margin: 4px 0 0; }
+
+  .eve-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .eve-bar-row .bl { font-size: 11px; color: var(--eve-muted); min-width: 80px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .eve-bar-track { flex: 1; height: 4px; background: var(--eve-surface); border-radius: 2px; overflow: hidden; }
+  .eve-bar-fill { height: 100%; border-radius: 2px; transition: width 0.25s ease; }
+  .eve-bar-row .bv { font-size: 11px; font-weight: 500; color: var(--eve-white); min-width: 68px; text-align: right; font-variant-numeric: tabular-nums; }
+  .eve-bar-row .bp { font-size: 10px; color: var(--eve-subtle); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .eve-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 99px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .eve-pill.green { background: rgba(0, 229, 160, 0.1); color: var(--eve-green); border: 1px solid rgba(0, 229, 160, 0.25); }
+  .eve-pill.amber { background: rgba(255, 179, 64, 0.1); color: var(--eve-amber); border: 1px solid rgba(255, 179, 64, 0.25); }
+  .eve-pill.red { background: rgba(255, 77, 106, 0.1); color: var(--eve-red); border: 1px solid rgba(255, 77, 106, 0.25); }
+
+  .eve-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 1rem 0; }
+  .eve-panel-block { display: none; }
+  .eve-panel-block.active { display: block; }
+
+  table.eve-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.eve-table th { font-size: 10px; font-weight: 500; color: var(--eve-muted); text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--eve-border); letter-spacing: 0.1em; text-transform: uppercase; }
+  table.eve-table td { padding: 8px 8px; border-bottom: 1px solid rgba(0,180,255,0.06); color: var(--eve-white); }
+  table.eve-table tr:last-child td { border-bottom: none; }
+  table.eve-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .chart-wrap { position: relative; height: 200px; margin-top: 1.25rem; }
+  .chart-wrap canvas { width: 100% !important; }
+
+  .scan-line { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent 0%, var(--eve-cyan-dim) 50%, transparent 100%); opacity: 0.4; pointer-events: none; }
+
+  @media (max-width: 560px) {
+    .eve-metrics { grid-template-columns: repeat(2, 1fr); }
+    .eve-grid3 { grid-template-columns: 1fr 1fr; }
+    .eve-row label { min-width: 120px; font-size: 11px; }
+  }
+</style>
+
+<div class="eve-wrap">
+  <div class="eve-header">
+    <div class="eve-logo-dot"></div>
+    <span class="eve-header-title">Simulador de Pricing</span>
+    <span class="eve-header-sub">Modo analítico</span>
+  </div>
+
+  <div class="eve-tabs">
+    <button class="eve-tab active" onclick="eveTab('pricing')">Pricing</button>
+    <button class="eve-tab" onclick="eveTab('cenarios')">Cenários</button>
+    <button class="eve-tab" onclick="eveTab('break')">Break-even</button>
+  </div>
+
+  <div id="epanel-pricing" class="eve-panel-block active">
+    <p class="eve-section-label">Estrutura de custos</p>
+    <div class="eve-row">
+      <label>Custo direto (CMV)</label>
+      <input type="number" id="cmv" value="100" min="0" step="1" oninput="eveCalc()" class="eve-input">
+      <span class="eve-input-unit">R$</span>
+    </div>
+    <div class="eve-row">
+      <label>Custo fixo rateado</label>
+      <input type="number" id="fixo" value="30" min="0" step="1" oninput="eveCalc()" class="eve-input">
+      <span class="eve-input-unit">R$</span>
+    </div>
+    <div class="eve-row">
+      <label>Impostos sobre venda</label>
+      <input type="range" id="impostos" min="0" max="40" value="8" step="0.5" oninput="eveCalc(); updateTrack(this)" class="eve-range">
+      <span class="val" id="v-impostos">8,0%</span>
+    </div>
+
+    <hr class="eve-divider">
+    <p class="eve-section-label">Margem &amp; desconto</p>
+    <div class="eve-row">
+      <label>Margem de lucro desejada</label>
+      <input type="range" id="margem" min="0" max="80" value="30" step="0.5" oninput="eveCalc(); updateTrack(this)" class="eve-range">
+      <span class="val" id="v-margem">30,0%</span>
+    </div>
+    <div class="eve-row">
+      <label>Desconto máximo</label>
+      <input type="range" id="desconto" min="0" max="50" value="10" step="0.5" oninput="eveCalc(); updateTrack(this)" class="eve-range">
+      <span class="val" id="v-desconto">10,0%</span>
+    </div>
+    <div class="eve-row">
+      <label>Comissão de vendas</label>
+      <input type="range" id="comissao" min="0" max="20" value="5" step="0.5" oninput="eveCalc(); updateTrack(this)" class="eve-range">
+      <span class="val" id="v-comissao">5,0%</span>
+    </div>
+
+    <hr class="eve-divider">
+    <div class="eve-metrics">
+      <div class="eve-metric primary">
+        <p class="mlabel">Preço cheio</p>
+        <p class="mvalue" id="m-preco">—</p>
+        <p class="msub">sem desconto</p>
+      </div>
+      <div class="eve-metric">
+        <p class="mlabel">Preço c/ desconto</p>
+        <p class="mvalue" id="m-desc">—</p>
+        <p class="msub" id="m-desc-sub">—% off</p>
+      </div>
+      <div class="eve-metric">
+        <p class="mlabel">Margem real</p>
+        <p class="mvalue" id="m-margem-real">—</p>
+        <p class="msub" id="m-margem-pill"></p>
+      </div>
+      <div class="eve-metric">
+        <p class="mlabel">Lucro bruto</p>
+        <p class="mvalue" id="m-lucro">—</p>
+        <p class="msub">por unidade</p>
+      </div>
+    </div>
+
+    <p class="eve-section-label">Composição do preço</p>
+    <div id="eve-bars"></div>
+  </div>
+
+  <div id="epanel-cenarios" class="eve-panel-block">
+    <p class="eve-section-label">Parâmetros de volume</p>
+    <div class="eve-row">
+      <label>Volume de vendas</label>
+      <input type="number" id="volume" value="200" min="1" step="1" oninput="eveCalc()" class="eve-input">
+      <span class="eve-input-unit">un</span>
+    </div>
+    <div style="overflow-x:auto; margin-top: 1rem;">
+      <table class="eve-table" id="eve-table-cenarios">
+        <thead><tr>
+          <th>Cenário</th>
+          <th class="num">Preço</th>
+          <th class="num">Desconto</th>
+          <th class="num">Margem</th>
+          <th class="num">Receita</th>
+          <th class="num">Lucro total</th>
+        </tr></thead>
+        <tbody id="eve-tbody-cenarios"></tbody>
+      </table>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="eve-chart-cenarios" role="img" aria-label="Gráfico de lucro total por cenário"></canvas>
+    </div>
+  </div>
+
+  <div id="epanel-break" class="eve-panel-block">
+    <p class="eve-section-label">Custo fixo mensal</p>
+    <div class="eve-row">
+      <label>Custo fixo total mensal</label>
+      <input type="number" id="cf-total" value="5000" min="0" step="100" oninput="eveCalc()" class="eve-input">
+      <span class="eve-input-unit">R$</span>
+    </div>
+    <div class="eve-grid3">
+      <div class="eve-metric">
+        <p class="mlabel">Break-even (un.)</p>
+        <p class="mvalue" id="be-units">—</p>
+        <p class="msub">unidades/mês</p>
+      </div>
+      <div class="eve-metric">
+        <p class="mlabel">Break-even (receita)</p>
+        <p class="mvalue" id="be-receita">—</p>
+        <p class="msub">faturamento mínimo</p>
+      </div>
+      <div class="eve-metric">
+        <p class="mlabel">Margem de contribuição</p>
+        <p class="mvalue" id="be-mc">—</p>
+        <p class="msub">por unidade</p>
+      </div>
+    </div>
+    <div class="chart-wrap" style="height: 220px;">
+      <canvas id="eve-chart-break" role="img" aria-label="Gráfico break-even por volume"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+let eveChartC = null, eveChartB = null;
+
+function n(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function fmt(v) { return 'R$\u00a0' + v.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+function fmtp(v) { return v.toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + '%'; }
+
+function updateTrack(el) {
+  const min = +el.min, max = +el.max, val = +el.value;
+  const pct = ((val - min) / (max - min) * 100).toFixed(1) + '%';
+  el.style.setProperty('--pct', pct);
+}
+
+function eveTab(t) {
+  document.querySelectorAll('.eve-tab').forEach((b, i) => {
+    b.classList.toggle('active', ['pricing','cenarios','break'][i] === t);
+  });
+  document.querySelectorAll('.eve-panel-block').forEach(p => p.classList.remove('active'));
+  document.getElementById('epanel-' + t).classList.add('active');
+  eveCalc();
+}
+
+const chartDefaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false }, tooltip: {
+    backgroundColor: '#0b1422',
+    borderColor: 'rgba(0,180,255,0.3)',
+    borderWidth: 1,
+    titleColor: '#00b4ff',
+    bodyColor: '#e8f4ff',
+    callbacks: { label: ctx => ' ' + ctx.dataset.label + ': R$' + ctx.parsed.y.toLocaleString('pt-BR') }
+  }},
+  scales: {
+    x: { grid: { color: 'rgba(0,180,255,0.05)' }, ticks: { color: '#6a8aaa', font: { size: 11 } } },
+    y: { grid: { color: 'rgba(0,180,255,0.05)' }, ticks: { color: '#6a8aaa', font: { size: 11 }, callback: v => 'R$' + v.toLocaleString('pt-BR') } }
+  }
+};
+
+function eveCalc() {
+  const cmv = n('cmv'), fixo = n('fixo');
+  const impostos = n('impostos') / 100;
+  const margem = n('margem') / 100;
+  const descPct = n('desconto') / 100;
+  const comissao = n('comissao') / 100;
+
+  document.getElementById('v-impostos').textContent = fmtp(n('impostos'));
+  document.getElementById('v-margem').textContent = fmtp(n('margem'));
+  document.getElementById('v-desconto').textContent = fmtp(n('desconto'));
+  document.getElementById('v-comissao').textContent = fmtp(n('comissao'));
+
+  document.querySelectorAll('input.eve-range').forEach(updateTrack);
+
+  const custoTotal = cmv + fixo;
+  const divisor = 1 - margem - impostos - comissao;
+  const preco = divisor > 0 ? custoTotal / divisor : 0;
+  const precoDesc = preco * (1 - descPct);
+  const lucro = preco - custoTotal - preco * impostos - preco * comissao;
+  const lucroDesc = precoDesc - custoTotal - precoDesc * impostos - precoDesc * comissao;
+  const margemReal = preco > 0 ? (lucroDesc / precoDesc * 100) : 0;
+
+  document.getElementById('m-preco').textContent = fmt(preco);
+  document.getElementById('m-desc').textContent = fmt(precoDesc);
+  document.getElementById('m-desc-sub').textContent = fmtp(n('desconto')) + ' off';
+  document.getElementById('m-margem-real').textContent = fmtp(margemReal);
+  document.getElementById('m-lucro').textContent = fmt(lucroDesc);
+
+  const pill = document.getElementById('m-margem-pill');
+  if (margemReal >= n('margem')) {
+    pill.innerHTML = '<span class="eve-pill green">meta atingida</span>';
+  } else if (margemReal > 0) {
+    pill.innerHTML = '<span class="eve-pill amber">abaixo da meta</span>';
+  } else {
+    pill.innerHTML = '<span class="eve-pill red">prejuízo</span>';
+  }
+
+  const bars = document.getElementById('eve-bars');
+  const barColors = ['#00b4ff', '#354a62', '#ff4d6a', '#ffb340', '#00e5a0'];
+  const items = [
+    { label: 'CMV', val: cmv, color: barColors[0], pct: preco > 0 ? cmv/preco*100 : 0 },
+    { label: 'Fixo', val: fixo, color: barColors[1], pct: preco > 0 ? fixo/preco*100 : 0 },
+    { label: 'Impostos', val: preco*impostos, color: barColors[2], pct: impostos*100 },
+    { label: 'Comissão', val: preco*comissao, color: barColors[3], pct: comissao*100 },
+    { label: 'Lucro', val: lucro, color: barColors[4], pct: preco > 0 ? lucro/preco*100 : 0 },
+  ];
+  bars.innerHTML = items.map(it => `
+    <div class="eve-bar-row">
+      <span class="bl">${it.label}</span>
+      <div class="eve-bar-track"><div class="eve-bar-fill" style="width:${Math.max(0,it.pct).toFixed(1)}%;background:${it.color}"></div></div>
+      <span class="bv">${fmt(it.val)}</span>
+      <span class="bp">${fmtp(it.pct)}</span>
+    </div>`).join('');
+
+  const volume = n('volume') || 200;
+  const cenarios = [0, 5, 10, 15, 20, 25].map(d => {
+    const p = preco * (1 - d/100);
+    const luc = p - custoTotal - p*impostos - p*comissao;
+    const mg = p > 0 ? luc/p*100 : 0;
+    return { desc: d, preco: p, margem: mg, lucro: luc, receita: p*volume, lucroTotal: luc*volume };
+  });
+
+  const tbody = document.getElementById('eve-tbody-cenarios');
+  if (tbody) {
+    tbody.innerHTML = cenarios.map((c, i) => `
+      <tr style="${i===0 ? 'background: rgba(0,180,255,0.04);' : ''}">
+        <td style="${i===0 ? 'color:var(--eve-cyan);font-weight:500' : ''}">${i===0 ? 'Sem desconto' : c.desc+'% off'}</td>
+        <td class="num">${fmt(c.preco)}</td>
+        <td class="num" style="color:var(--eve-muted)">${c.desc > 0 ? fmtp(c.desc) : '—'}</td>
+        <td class="num" style="color:${c.margem >= n('margem') ? 'var(--eve-green)' : c.margem > 0 ? 'var(--eve-amber)' : 'var(--eve-red)'}">${fmtp(c.margem)}</td>
+        <td class="num">${fmt(c.receita)}</td>
+        <td class="num">${fmt(c.lucroTotal)}</td>
+      </tr>`).join('');
+  }
+
+  const ctx1 = document.getElementById('eve-chart-cenarios');
+  if (ctx1 && document.getElementById('epanel-cenarios').classList.contains('active')) {
+    if (eveChartC) eveChartC.destroy();
+    eveChartC = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: cenarios.map(c => c.desc === 0 ? 'Sem desc.' : c.desc + '%'),
+        datasets: [
+          { label: 'Receita', data: cenarios.map(c => Math.round(c.receita)), backgroundColor: 'rgba(0,180,255,0.25)', borderColor: '#00b4ff', borderWidth: 1 },
+          { label: 'Lucro', data: cenarios.map(c => Math.round(c.lucroTotal)), backgroundColor: 'rgba(0,229,160,0.25)', borderColor: '#00e5a0', borderWidth: 1 }
+        ]
+      },
+      options: chartDefaults
+    });
+  }
+
+  const cfTotal = n('cf-total');
+  const mc = preco - cmv - preco*impostos - preco*comissao;
+  const beUnits = mc > 0 ? Math.ceil(cfTotal / mc) : 0;
+  const beReceita = beUnits * preco;
+  const beEl = document.getElementById('be-units');
+  if (beEl) beEl.textContent = beUnits.toLocaleString('pt-BR');
+  const brEl = document.getElementById('be-receita');
+  if (brEl) brEl.textContent = fmt(beReceita);
+  const bmEl = document.getElementById('be-mc');
+  if (bmEl) bmEl.textContent = fmt(mc);
+
+  const ctx2 = document.getElementById('eve-chart-break');
+  if (ctx2 && document.getElementById('epanel-break').classList.contains('active')) {
+    if (eveChartB) eveChartB.destroy();
+    const pts = [...new Set(Array.from({length: 11}, (_, i) => Math.round(beUnits * i / 5)))];
+    eveChartB = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: pts,
+        datasets: [
+          { label: 'Receita', data: pts.map(q => Math.round(q * preco)), borderColor: '#00b4ff', backgroundColor: 'rgba(0,180,255,0.06)', fill: true, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#00b4ff' },
+          { label: 'Custos totais', data: pts.map(q => Math.round(cfTotal + q * (cmv + fixo))), borderColor: '#ff4d6a', backgroundColor: 'rgba(255,77,106,0.06)', fill: true, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#ff4d6a' }
+        ]
+      },
+      options: { ...chartDefaults, scales: { ...chartDefaults.scales, x: { ...chartDefaults.scales.x, title: { display: true, text: 'unidades', color: '#6a8aaa', font: { size: 11 } } } } }
+    });
+  }
+}
+
+eveCalc();
+</script>
