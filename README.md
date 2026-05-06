@@ -1,132 +1,110 @@
-# PriceOps — Simulador de Pricing Estratégico
+# PriceOps - Simulador de Pricing Estrategico
 
-> Simule preços, analise margens, calcule break-even e explore cenários de desconto — tudo em tempo real, direto no navegador, sem planilhas.
-
----
-
-## Sobre o projeto
-
-O **PriceOps** é uma ferramenta de precificação estratégica construída inteiramente em HTML, CSS e JavaScript puro. Nasceu da necessidade de ter uma calculadora de preços rápida, visual e sem dependências — sem instalar nada, sem cadastro, sem backend.
-
-O projeto evoluiu de um simulador simples para uma aplicação com landing page própria e simulador em modo tela cheia, com três módulos analíticos integrados.
-
----
+Aplicacao web estatica para simulacao de pricing, margem, desconto, break-even, otimizacao por elasticidade e unit economics. Tudo roda localmente no navegador.
 
 ## Funcionalidades
 
-###  Módulo Pricing
-- Cálculo do preço ideal a partir do CMV e custo fixo rateado
-- Configuração de impostos sobre venda, comissão de vendas e margem de lucro desejada
-- Visualização da composição do preço em barras proporcionais (CMV, fixo, impostos, comissão, lucro)
-- Simulação de desconto máximo com cálculo da margem real resultante
-- Indicador visual de status: meta atingida, abaixo da meta ou prejuízo
+- Pricing por margem alvo com CMV, custo fixo rateado, impostos e comissao.
+- Composicao do preco por barras: CMV, fixo, impostos, comissao e lucro.
+- Markup sobre custo total, take rate, preco minimo de lucro zero e desconto limite.
+- Simulacao de cenarios de desconto com receita, margem e lucro total.
+- Break-even em unidades e faturamento minimo, com grafico receita x custo.
+- Otimizacao por curva preco-demanda:
+  - faixa minima e maxima de preco;
+  - elasticidade-preco;
+  - demanda base;
+  - preco concorrente;
+  - capacidade mensal;
+  - melhor preco por lucro total.
+- Unit economics:
+  - CAC;
+  - ticket recorrente;
+  - churn;
+  - novos clientes por mes;
+  - LTV;
+  - LTV/CAC;
+  - payback CAC;
+  - projecao de contribuicao acumulada.
+- Black-Scholes-Merton:
+  - precificacao teorica de call e put europeias;
+  - taxa livre de risco, volatilidade, dividend yield e prazo;
+  - Delta, Gamma, Vega, Theta, Rho e valor intrinseco;
+  - grafico de payoff liquido no vencimento.
+- Diagnostico de risco comercial e operacional.
+- Historico local via `localStorage`.
+- Exportacao CSV da simulacao atual.
+- Barra global de acoes disponivel em todas as abas.
+- Relatorio em PDF pela impressao nativa do navegador, mantendo o visual do HTML com cards, tabelas, graficos e valores, sem paineis de controle.
 
-###  Módulo Cenários
-- Comparação simultânea de 6 níveis de desconto (0% a 25%)
-- Tabela com preço, margem, receita e lucro total por cenário
-- Gráfico de barras com receita e lucro por volume de vendas
-- Destaque automático dos cenários dentro e fora da meta de margem
+## Como executar
 
-###  Módulo Break-even
-- Cálculo do ponto de equilíbrio em unidades e em faturamento
-- Margem de contribuição por unidade
-- Gráfico de linha com cruzamento entre receita total e custos totais
-- Base configurável de custo fixo mensal
+Abra o arquivo `index.html` diretamente no navegador.
 
----
+Opcionalmente, use um servidor local:
 
-## Tecnologias
-
-- **HTML5** — estrutura e semântica
-- **CSS3** — layout, variáveis, animações e responsividade
-- **JavaScript (vanilla)** — lógica de cálculo e interatividade
-- **Chart.js 4.4** — gráficos de barra e linha
-- **Google Fonts** — tipografia (DM Serif Display, DM Mono, Outfit)
-
----
-
-## Como usar
-
-**Opção 1 — Direto no navegador**
-
-Faça o download ou clone o repositório e abra o arquivo `pricing_simulator.html` no navegador:
-
-```bash
-git clone https://github.com/GZimbra/Simulador_Pricing_HTML.git
-cd Simulador_Pricing_HTML
-# Abra o arquivo pricing_simulator.html no seu navegador
+```powershell
+python -m http.server 8080
 ```
 
-**Opção 2 — GitHub Pages**
+Acesse:
 
-Acesse diretamente pelo link publicado:
-
-```
-https://gzimbra.github.io/Simulador_Pricing_HTML/pricing_simulator.html
+```text
+http://localhost:8080
 ```
 
----
+## Formulas principais
 
-## Estrutura do projeto
-
-```
-Simulador_Pricing_HTML/
-│
-├── pricing_simulator.html   # Landing page + simulador completo
-└── README.md
-```
-
----
-
-## Fórmulas utilizadas
-
-| Conceito | Fórmula |
+| Metrica | Formula |
 |---|---|
-| Preço de venda | `(CMV + Fixo) ÷ (1 − Margem − Impostos − Comissão)` |
-| Preço com desconto | `Preço × (1 − Desconto%)` |
-| Margem real | `Lucro líquido ÷ Preço com desconto × 100` |
-| Margem de contribuição | `Preço − CMV − Impostos − Comissão` |
-| Break-even (un.) | `Custo fixo mensal ÷ Margem de contribuição` |
+| Preco alvo | `(CMV + fixo rateado) / (1 - margem - impostos - comissao)` |
+| Preco com desconto | `preco * (1 - desconto)` |
+| Lucro unitario | `preco - CMV - fixo rateado - impostos - comissao` |
+| Margem real | `lucro unitario / preco` |
+| Preco minimo lucro zero | `(CMV + fixo rateado) / (1 - impostos - comissao)` |
+| Markup | `(preco / custo total - 1) * 100` |
+| Margem de contribuicao | `preco - CMV - impostos - comissao` |
+| Break-even | `custo fixo mensal / margem de contribuicao` |
+| Demanda estimada | `demanda base * (preco base / preco analisado) ^ elasticidade` |
+| LTV | `contribuicao mensal / churn mensal` |
+| LTV/CAC | `LTV / CAC` |
+| Payback CAC | `CAC / contribuicao mensal` |
+| Black-Scholes call | `S * e^(-qT) * N(d1) - K * e^(-rT) * N(d2)` |
+| Black-Scholes put | `K * e^(-rT) * N(-d2) - S * e^(-qT) * N(-d1)` |
 
----
+## Stack
 
-## Capturas de tela
+- HTML5
+- CSS3
+- JavaScript vanilla
+- Chart.js 4.4 via CDN
 
-### Landing Page
-Interface de apresentação com resumo dos módulos e acesso ao simulador.
+## Estrutura
 
-### Simulador — Módulo Pricing
-Entrada de custos, sliders de margem e visualização da composição do preço.
+```text
+Simulador_Pricing/
+|-- index.html
+|-- assets/
+|   |-- css/
+|   |   `-- styles.css
+|   `-- js/
+|       `-- script.js
+|-- .editorconfig
+|-- .env.example
+|-- .gitattributes
+|-- .gitignore
+`-- README.md
+```
 
-### Simulador — Módulo Cenários
-Tabela comparativa de descontos com gráfico de receita × lucro.
+## Ambiente
 
-### Simulador — Módulo Break-even
-Gráfico de cruzamento com ponto de equilíbrio e métricas de contribuição.
+- `.env.local` e `.vercel/` ficam fora do Git.
+- Use `.env.example` como referencia para variaveis locais sem expor tokens.
+- O projeto nao exige build.
+- O Chart.js ainda e carregado por CDN no `index.html`.
+- Para uso offline, coloque o bundle local em `assets/vendor/` e ajuste o `<script>`.
 
----
+## Observacoes
 
-## Melhorias planejadas
-
-- [ ] Exportação dos resultados em PDF ou CSV
-- [ ] Histórico de simulações salvo localmente (localStorage)
-- [ ] Modo comparação de múltiplos produtos
-- [ ] Suporte a múltiplas alíquotas (Simples Nacional, Lucro Presumido)
-- [ ] Internacionalização (EN / ES)
-
----
-
-## Licença
-
-Este projeto está licenciado sob a [MIT License](LICENSE).
-
----
-
-## Autor
-
-Desenvolvido por **GZimbra**  
-[github.com/GZimbra](https://github.com/GZimbra)
-
-GZimbra
-
----
+- Nenhum dado e enviado para servidor.
+- O historico fica somente no navegador do usuario.
+- Para ambiente offline, baixe o bundle do Chart.js e substitua o CDN por arquivo local.

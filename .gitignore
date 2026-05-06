@@ -1,2 +1,7 @@
 .vercel
 .env*.local
+node_modules/
+dist/
+coverage/
+.DS_Store
+Thumbs.db
