@@ -89,7 +89,6 @@ Simulador_Pricing/
 |   `-- js/
 |       `-- script.js
 |-- .editorconfig
-|-- .env.example
 |-- .gitattributes
 |-- .gitignore
 `-- README.md
@@ -97,8 +96,6 @@ Simulador_Pricing/
 
 ## Ambiente
 
-- `.env.local` e `.vercel/` ficam fora do Git.
-- Use `.env.example` como referencia para variaveis locais sem expor tokens.
 - O projeto nao exige build.
 - O Chart.js ainda e carregado por CDN no `index.html`.
 - Para uso offline, coloque o bundle local em `assets/vendor/` e ajuste o `<script>`.
